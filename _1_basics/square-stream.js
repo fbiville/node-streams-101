@@ -1,6 +1,6 @@
 const {Transform} = require('stream');
 
-module.exports = class EchoStream extends Transform {
+module.exports = class SquareStream extends Transform {
     constructor() {
         super({objectMode: true});
     }
