@@ -4,10 +4,10 @@
 module.exports = async function* (elements) {
     for (const element of elements) {
         yield await new Promise((resolve) => {
-            const pauseInSeconds = element * 1000;
+            const pauseInMilliseconds = element * 1000;
             setTimeout(() => {
                 resolve(element);
-            }, pauseInSeconds);
+            }, pauseInMilliseconds);
         });
     }
 }
