@@ -1,21 +1,30 @@
-const {finished, PassThrough} = require('stream');
+const {pipeline, PassThrough} = require('stream');
 const AlwaysFailingSource = require('./failing-source');
+
+function onPipelineCompletion(err) {
+    if (err) {
+        console.error('If the error propagates downstream, ' +
+            'we\'ll see this message');
+    } else {
+        console.log('Pipeline successfully completed');
+    }
+}
 
 function main() {
     const source = new AlwaysFailingSource();
     const destination = new PassThrough();
-    // let's observe what happens with the built-in `finished` function
-    // ... when source completes (successfully or not)
-    finished(source, (err) => {
-        if (err) {
-            console.error('If the error happens, ' +
-                'we\'ll see this message');
-        } else {
-            console.log('Source successfully completed');
-        }
+    source.on('error', (err) => {
+        console.error(`Oh no! The following error happened: ${err}`);
     });
-    // let the data flow and see what happens!
-    source.pipe(destination);
+    // let the data flow with the built-in `pipeline` function
+    // prior to Node 10, this was called `pump`
+    pipeline(
+        source,
+        // there could be many Duplex streams in between
+        destination,
+        // it exposes a completion callback function
+        onPipelineCompletion
+    )
 }
 
 main();
