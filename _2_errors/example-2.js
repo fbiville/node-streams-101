@@ -8,7 +8,7 @@ function main() {
     // ... when source completes (successfully or not)
     finished(source, (err) => {
         if (err) {
-            console.error('If the error propagates downstream, ' +
+            console.error('If the error happens, ' +
                 'we\'ll see this message');
         } else {
             console.log('Source successfully completed');
